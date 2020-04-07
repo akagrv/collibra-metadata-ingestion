@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Jan 31 12:30:59 2020
+Created on Wed Mar 18 13:27:48 2020
 
 @author: gagrawa3
 """
 
 import requests
-import redshift_connect
+import oracle_connect
 import create_schema
 import create_table
 import create_column
@@ -23,28 +23,29 @@ password = config['collibra']['password']
 with requests.Session() as session:
     session.auth = (username, password)
     
-# get cursor object for querying Redshift
-cur = redshift_connect.getCursor()
+# get cursor object for querying Oracle
+cur = oracle_connect.getCursor()
 
 parentCommunityName = 'Data Warehouse'
-communityName = 'Redshift Data Warehouse'
-domainName = 'Redshift Physical Data Dictionary'
+communityName = 'Oracle Data Warehouse'
+domainName = 'Oracle Physical Data Dictionary'
 
 # query to get metadata from table
-query = '''select
-       sch.nspname as schemaname,
-       tbl.relname as tablename, 
-       col.attname as columnname,
-       typname as data_type
-    FROM pg_class tbl
-    JOIN pg_attribute col ON tbl.oid = col.attrelid
-    JOIN pg_namespace sch ON tbl.relnamespace = sch.oid
-    JOIN pg_type tp on col.atttypid = tp.oid
-    LEFT JOIN pg_constraint pk on tbl.oid = pk.conrelid and col.attnum = ANY(pk.conkey)
-    WHERE col.attisdropped = false  --exclude dropped columns
-             and col.attnum > 0 --exclude system columns (not part of user ddl)
-             and tbl.relkind = 'r' --include only user tables
-             and sch.nspname like 'asu_%' '''
+query = ''' select col.owner as schema_name,
+               col.table_name,
+               col.column_name,
+               col.DATA_TYPE
+            from dba_tab_columns col
+            inner join dba_tables t on col.owner = t.owner
+                                          and col.table_name = t.table_name
+                                          and t.owner in (
+                                          'SYSADM',
+                                          'ASUDW',
+                                          'DIRECTORY',
+                                          'ASU_CENSUS'
+                                          )
+            order by col.owner, col.table_name, col.column_id '''
+
 
 cur.execute(query)
 results = cur.fetchall()
