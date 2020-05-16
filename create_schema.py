@@ -14,6 +14,7 @@ json_obj = []
 # create community, domain and asset object
 community_list = []
 domain_list = []
+asset_set = set()
 asset_list = []
 
 def ingest_schema(communityName, domainName, schemaList, session, parentCommunityName = None):
@@ -23,7 +24,10 @@ def ingest_schema(communityName, domainName, schemaList, session, parentCommunit
 
     # adds all the schema to the asset list
     for schemaName in schemaList:
-        asset_list.append((communityName, domainName, schemaName, 'Schema'))
+        asset_set.add((communityName, domainName, schemaName, 'Schema'))
+    
+    #convert asset set to a list
+    asset_list = list(asset_set)
     
     for community in community_list:
         json_obj.append(parser.getCommunityObj(community, parentCommunityName))
@@ -38,6 +42,7 @@ def ingest_schema(communityName, domainName, schemaList, session, parentCommunit
         json.dump(json_obj, write_file)
     
     url = 'https://asu-dev.collibra.com/rest/2.0/import/json-job'
+    # url = 'https://asu.collibra.com/rest/2.0/import/json-job'
     
     files = {'file': open('schema_template.json', 'rb')}
     payload = {'sendNotification':'true'}

@@ -12,11 +12,11 @@ import os
 config = configparser.ConfigParser(os.environ)
 config.read('db.ini')
 
-dbname = config['oracle']['dbname']
-host = config['oracle']['host']
-port = config['oracle']['port']
-user = config['oracle']['user'] 
-pwd = config['oracle']['password']
+dbname = config['oracle-pm']['dbname']
+host = config['oracle-pm']['host']
+port = config['oracle-pm']['port']
+user = config['oracle-pm']['user'] 
+pwd = config['oracle-pm']['password']
 
 conn_string = host + "/" + dbname 
 

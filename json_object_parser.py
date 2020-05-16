@@ -39,15 +39,17 @@ def getAssetObj(communityName, domainName, assetName, assetType, displayName = N
        
     if attributes != None:
         attributes_obj = {}
-        attributes_obj[attributes[0]] = [{
-            'value': attributes[1]
-        }]
         
-#        for attributeKey, attributeValue in attributes:
-#            attributes_obj[attributeKey] = [{
-#                'value': attributeValue
-#            }]
-    
+        if not type(attributes[0]) is tuple:
+            attributes_obj[attributes[0]] = [{
+                'value': attributes[1]
+            }]
+        else:
+            for attributeKey, attributeValue in attributes:
+                attributes_obj[attributeKey] = [{
+                    'value': attributeValue
+                }]
+        
         obj['attributes'] = attributes_obj
     
     if relations != None:

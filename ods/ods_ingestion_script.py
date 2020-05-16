@@ -26,9 +26,9 @@ with requests.Session() as session:
 # get cursor object for querying ODS
 cur = ods_connect.getCursor()
 
-parentCommunityName = 'ODS'
-communityName = 'Aurora'
-domainName = 'Aurora Physical Data Dictionary'
+parentCommunityName = '(ODS) - Operational Data Store'
+communityName = 'Aurora ODS'
+domainName = 'Aurora ODS Physical Data Dictionary'
 
 # query to get metadata from table
 query = "select schemaname, tablename, columnname, data_type from u_ops.collibra_metadata_1_vw;"
@@ -36,9 +36,18 @@ query = "select schemaname, tablename, columnname, data_type from u_ops.collibra
 cur.execute(query)
 results = cur.fetchall()
 
-schemaList = [result[0] for result in results]
-tableList = [result[1] for result in results]
-
+# results field order
+# schemaName, tableName, colName, colType 
+schemaList = []
+tableList = []
+colList = []
+colAttrList = []
+for result in results:
+    schemaList.append(result[0])
+    tableList.append(result[1])
+    colList.append(result[2])
+    colAttrList.append(('Column Data Type', result[3]))
+    
 create_schema.ingest_schema(communityName, domainName, schemaList, session, parentCommunityName)
-create_table.ingest_table(communityName, domainName, schemaList, tableList, session, parentCommunityName)
-create_column.ingest_column(communityName, domainName, results, session, parentCommunityName)
+create_table.ingest_table(communityName, domainName, schemaList, tableList, None, session, parentCommunityName)
+create_column.ingest_column(communityName, domainName, schemaList, tableList, colList, colAttrList, session, parentCommunityName)
