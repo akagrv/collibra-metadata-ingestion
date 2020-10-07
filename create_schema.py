@@ -36,7 +36,7 @@ def ingest_schema(communityName, domainName, schemaList, session, parentCommunit
         json_obj.append(parser.getDomainObj(communityName, domainName, domainType))
     
     for communityName, domainName, assetName, assetType in asset_list:
-        json_obj.append(parser.getAssetObj(communityName, domainName, assetName, assetType))
+        json_obj.append(parser.getAssetObj(communityName, domainName, assetName, assetType, assetName))
     
     with open("schema_template.json", "w") as write_file:
         json.dump(json_obj, write_file)

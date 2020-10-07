@@ -30,13 +30,13 @@ def ingest_table(communityName, domainName, schemaList, tableList, attrList, ses
             for schemaName, tableName, tableAttr in zip(schemaList, tableList, attrList):
                 # (relation_type_id:relation_direction, relation_asset_name) - (schema type id , schema name)
                 relations = ('00000000-0000-0000-0000-000000007043:SOURCE',schemaName)
-                asset_set.add((communityName, domainName, schemaName+'__'+tableName, 'Table', tableName, tableAttr, relations))
+                asset_set.add((communityName, domainName, schemaName+'.'+tableName, 'Table', tableName, tableAttr, relations))
         else:
             print("Table Attributes list is null")
             for schemaName, tableName in zip(schemaList, tableList):
                 # (relation_type_id:relation_direction, relation_asset_name) - (schema type id , schema name)
                 relations = ('00000000-0000-0000-0000-000000007043:SOURCE',schemaName)
-                asset_set.add((communityName, domainName, schemaName+'__'+tableName, 'Table', tableName, None, relations))
+                asset_set.add((communityName, domainName, schemaName+'.'+tableName, 'Table', tableName, None, relations))
     else:
         print("Schema List is null")
         # adds all the table to the asset list

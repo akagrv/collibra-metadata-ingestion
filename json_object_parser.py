@@ -49,8 +49,23 @@ def getAssetObj(communityName, domainName, assetName, assetType, displayName = N
                 attributes_obj[attributeKey] = [{
                     'value': attributeValue
                 }]
+                
+        if displayName != None:
+            attributes_obj['Print Name'] = [{
+                'value': displayName        
+            }]
         
         obj['attributes'] = attributes_obj
+    
+    # TODO: remove display name and add print name as attr
+    if attributes == None and displayName != None:
+        attributes_obj = {}
+        attributes_obj['Print Name'] = [{
+            'value': displayName        
+        }]
+        
+        obj['attributes'] = attributes_obj
+        
     
     if relations != None:
         obj['relations'] = {
@@ -67,8 +82,8 @@ def getAssetObj(communityName, domainName, assetName, assetType, displayName = N
             ]
         }
     
-    if displayName != None:
-        obj['displayName'] = displayName
+#    if displayName != None:
+#        obj['displayName'] = displayName
     obj['type'] = {
         'name': assetType
     }

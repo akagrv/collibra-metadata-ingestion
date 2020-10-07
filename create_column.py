@@ -27,13 +27,13 @@ def ingest_column(communityName, domainName, schemaList, tableList, colList, att
     if schemaList != None:
         for schemaName, tableName, columnName, columnAttr in zip(schemaList, tableList, colList, attrList):
             # (relation_type_id:relation_direction, relation_asset_name)
-            relations = ('00000000-0000-0000-0000-000000007042:TARGET', schemaName+'__'+tableName)
-            asset_set.add((communityName, domainName, schemaName+'__'+tableName+'__'+columnName, 'Column', columnName, columnAttr, relations))
+            relations = ('00000000-0000-0000-0000-000000007042:TARGET', schemaName+'.'+tableName)
+            asset_set.add((communityName, domainName, schemaName+'.'+tableName+'.'+columnName, 'Column', columnName, columnAttr, relations))
     else:
         for tableName, columnName, columnAttr in zip(tableList, colList, attrList):
             # (relation_type_id:relation_direction, relation_asset_name)
             relations = ('00000000-0000-0000-0000-000000007042:TARGET', tableName)
-            asset_set.add((communityName, domainName, tableName+'__'+columnName, 'Column', columnName, columnAttr, relations))
+            asset_set.add((communityName, domainName, tableName+'.'+columnName, 'Column', columnName, columnAttr, relations))
        
     asset_list = list(asset_set)
     
@@ -44,8 +44,8 @@ def ingest_column(communityName, domainName, schemaList, tableList, colList, att
         json_obj.append(parser.getDomainObj(communityName, domainName, domainType))
     
     for communityName, domainName, assetName, assetType, columnName, attrList, relation in asset_list:
-        # split if file size is roughly around 20MB
-        if(sys.getsizeof(json_obj) > 350000) :
+        # split if file size is roughly around 22MB
+        if(sys.getsizeof(json_obj) > 400000) :
             list_json_obj.append(json_obj)
             json_obj = []
         json_obj.append(parser.getAssetObj(communityName, domainName, assetName, assetType, columnName, attrList, relation))
